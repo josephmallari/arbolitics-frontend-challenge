@@ -3,35 +3,38 @@
 import React from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 const LoginForm = () => {
+  const router = useRouter();
   // Define the mutation for the POST request
   // @ts-ignore
   const mutation = useMutation({
     mutationFn: async (formData) => {
-      console.log(formData);
-      const response = await fetch("https://staging-api.arbolitics.com/auth/login", {
-        method: "POST",
-        body: JSON.stringify(formData),
+      const response = await axios.post("/api/proxy", formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
-      if (!response.ok) {
+
+      if (response.status !== 200 && response.status !== 201) {
         throw new Error("Failed to login");
       }
-      return response.json();
+      return response.data;
+    },
+    onSuccess: (data) => {
+      const accessToken = data.data.accessToken;
+      router.push(`/data?userData=${encodeURIComponent(JSON.stringify(accessToken))}`);
     },
   });
 
-  // Setup React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  // Handle form submission
   const onSubmit = (data: void) => {
     mutation.mutate(data);
   };
@@ -42,7 +45,6 @@ const LoginForm = () => {
 
       {/* @ts-ignore */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        {/* Email Field */}
         <div>
           <label className="block font-medium">Email</label>
           <input
@@ -56,7 +58,6 @@ const LoginForm = () => {
           {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
         </div>
 
-        {/* Password Field */}
         <div>
           <label className="block font-medium">Password</label>
           <input
