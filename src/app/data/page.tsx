@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import ReactECharts from "echarts-for-react";
 import "tailwindcss/tailwind.css";
 
-const fetchDataset = async ({ queryKey }) => {
+const fetchDataset = async ({ queryKey }: { queryKey: [string, string, number, number] }) => {
   const [, accessToken, location_id, limit] = queryKey;
   const response = await axios.get("/api/fetchData", {
     params: {
@@ -20,16 +20,24 @@ const fetchDataset = async ({ queryKey }) => {
   return response.data.data; // Adjusted to return the data array
 };
 
-const processData = (data, interval) => {
+interface DataItem {
+  DID: string;
+  tem1: number;
+  hum1: number;
+}
+
+type Interval = "daily" | "weekly" | "monthly";
+
+const processData = (data: DataItem[], interval: Interval): DataItem[] => {
   if (!Array.isArray(data)) {
     console.error("Data is not an array:", data);
     return [];
   }
 
-  const intervals = {
+  const intervals: Record<Interval, number> = {
     daily: 24 * 2,
-    weekly: 24 * 7 * 2,
-    monthly: 24 * 7 * 4 * 2,
+    weekly: 24 * 7,
+    monthly: 24 * 7 * 4,
   };
 
   const intervalSize = intervals[interval];
@@ -37,8 +45,12 @@ const processData = (data, interval) => {
   return data.slice(0, intervalSize);
 };
 
-const generateXAxisData = (limit) => {
-  const xAxisData = [];
+interface GenerateXAxisData {
+  (limit: number): string[];
+}
+
+const generateXAxisData: GenerateXAxisData = (limit) => {
+  const xAxisData: string[] = [];
   const startDate = new Date("2025-01-01T00:00:00");
 
   for (let i = 0; i < limit; i++) {
@@ -49,7 +61,12 @@ const generateXAxisData = (limit) => {
   return xAxisData;
 };
 
-const DataVisualization = ({ data, interval }) => {
+interface DataVisualizationProps {
+  data: DataItem[];
+  interval: Interval;
+}
+
+const DataVisualization: React.FC<DataVisualizationProps> = ({ data, interval }) => {
   const filteredData = processData(data, interval);
 
   const device1Data = filteredData.filter((item) => item.DID === "25_225");
@@ -109,7 +126,7 @@ const DataPage = () => {
   const searchParams = useSearchParams();
   const accessToken = searchParams ? searchParams.get("userData") : null;
 
-  const [interval, setInterval] = useState("daily");
+  const [interval, setInterval] = useState<Interval>("daily");
   const [limit, setLimit] = useState(24);
 
   useEffect(() => {
@@ -144,7 +161,7 @@ const DataPage = () => {
         <select
           id="interval"
           value={interval}
-          onChange={(e) => setInterval(e.target.value)}
+          onChange={(e) => setInterval(e.target.value as Interval)}
           className="p-2 border rounded"
         >
           <option value="daily">Daily</option>
