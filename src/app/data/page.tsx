@@ -44,6 +44,9 @@ const DataVisualization = ({ data }) => {
 
   const filteredData = processData(data, interval);
 
+  const device1Data = filteredData.filter((item) => item.DID === "25_225");
+  const device2Data = filteredData.filter((item) => item.DID === "25_226");
+
   const option = {
     title: {
       text: "Temperature and Humidity",
@@ -52,7 +55,7 @@ const DataVisualization = ({ data }) => {
       trigger: "axis",
     },
     legend: {
-      data: ["Temperature", "Humidity"],
+      data: ["Temperature 25_225", "Humidity 25_225", "Temperature 25_226", "Humidity 25_226"],
     },
     xAxis: {
       type: "category",
@@ -63,14 +66,24 @@ const DataVisualization = ({ data }) => {
     },
     series: [
       {
-        name: "Temperature",
+        name: "Temperature 25_225",
         type: "line",
-        data: filteredData.map((item) => item.tem1),
+        data: device1Data.map((item) => item.tem1),
       },
       {
-        name: "Humidity",
+        name: "Humidity 25_225",
         type: "line",
-        data: filteredData.map((item) => item.hum1),
+        data: device1Data.map((item) => item.hum1),
+      },
+      {
+        name: "Temperature 25_226",
+        type: "line",
+        data: device2Data.map((item) => item.tem1),
+      },
+      {
+        name: "Humidity 25_226",
+        type: "line",
+        data: device2Data.map((item) => item.hum1),
       },
     ],
   };
