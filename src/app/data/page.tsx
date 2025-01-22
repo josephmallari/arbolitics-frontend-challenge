@@ -4,10 +4,11 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import ReactECharts from "echarts-for-react";
 import "tailwindcss/tailwind.css";
+import DataVisualization from "../components/DataVisualization";
+import { Interval } from "../types"; // Import type
 
-const fetchDataset = async ({ queryKey }: { queryKey: [string, string, number, number] }) => {
+const fetchDataset = async ({ queryKey }: { queryKey: [string, string | null, number, number] }) => {
   const [, accessToken, location_id, limit] = queryKey;
   const response = await axios.get("/api/fetchData", {
     params: {
@@ -20,109 +21,7 @@ const fetchDataset = async ({ queryKey }: { queryKey: [string, string, number, n
   return response.data.data; // Adjusted to return the data array
 };
 
-interface DataItem {
-  DID: string;
-  tem1: number;
-  hum1: number;
-}
-
-type Interval = "daily" | "weekly" | "monthly";
-
-const processData = (data: DataItem[], interval: Interval): DataItem[] => {
-  if (!Array.isArray(data)) {
-    console.error("Data is not an array:", data);
-    return [];
-  }
-
-  const intervals: Record<Interval, number> = {
-    daily: 24 * 2,
-    weekly: 24 * 7 * 2,
-    monthly: 24 * 7 * 4 * 2,
-  };
-
-  const intervalSize = intervals[interval];
-
-  return data.slice(0, intervalSize);
-};
-
-interface GenerateXAxisData {
-  (limit: number): string[];
-}
-
-const generateXAxisData: GenerateXAxisData = (limit) => {
-  const xAxisData: string[] = [];
-  const startDate = new Date("2025-01-01T00:00:00");
-
-  for (let i = 0; i < limit; i++) {
-    const date = new Date(startDate.getTime() - i * 60 * 60 * 1000);
-    xAxisData.unshift(date.toLocaleString());
-  }
-
-  return xAxisData;
-};
-
-interface DataVisualizationProps {
-  data: DataItem[];
-  interval: Interval;
-}
-
-const DataVisualization: React.FC<DataVisualizationProps> = ({ data, interval }) => {
-  const filteredData = processData(data, interval);
-
-  const device1Data = filteredData.filter((item) => item.DID === "25_225");
-  const device2Data = filteredData.filter((item) => item.DID === "25_226");
-
-  console.log("filtered dataa", filteredData.length);
-
-  const option = {
-    title: {
-      text: "Temperature and Humidity",
-    },
-    tooltip: {
-      trigger: "axis",
-    },
-    legend: {
-      data: ["Temperature 25_225", "Humidity 25_225", "Temperature 25_226", "Humidity 25_226"],
-    },
-    xAxis: {
-      type: "category",
-      data: generateXAxisData(filteredData.length / 2), // Updated to use generateXAxisData
-    },
-    yAxis: {
-      type: "value",
-    },
-    series: [
-      {
-        name: "Temperature 25_225",
-        type: "line",
-        data: device1Data.map((item) => item.tem1),
-      },
-      {
-        name: "Humidity 25_225",
-        type: "line",
-        data: device1Data.map((item) => item.hum1),
-      },
-      {
-        name: "Temperature 25_226",
-        type: "line",
-        data: device2Data.map((item) => item.tem1),
-      },
-      {
-        name: "Humidity 25_226",
-        type: "line",
-        data: device2Data.map((item) => item.hum1),
-      },
-    ],
-  };
-
-  return (
-    <div className="p-4">
-      <ReactECharts option={option} style={{ height: "400px", width: "100%" }} />
-    </div>
-  );
-};
-
-const DataPage = () => {
+const DataPage: React.FC = () => {
   const searchParams = useSearchParams();
   const accessToken = searchParams ? searchParams.get("userData") : null;
 

@@ -1,28 +1,34 @@
 "use client";
 
 import React from "react";
-import { useForm } from "react-hook-form";
-import { useMutation } from "@tanstack/react-query";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { useMutation, MutationFunction } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-const LoginForm = () => {
+interface FormData {
+  email: string;
+  password: string;
+}
+
+const loginMutationFn: MutationFunction<any, FormData> = async (formData) => {
+  const response = await axios.post("/api/proxy", formData, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (response.status !== 200 && response.status !== 201) {
+    throw new Error("Failed to login");
+  }
+  return response.data;
+};
+
+const LoginForm: React.FC = () => {
   const router = useRouter();
   // Define the mutation for the POST request
-  // @ts-ignore
   const mutation = useMutation({
-    mutationFn: async (formData) => {
-      const response = await axios.post("/api/proxy", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.status !== 200 && response.status !== 201) {
-        throw new Error("Failed to login");
-      }
-      return response.data;
-    },
+    mutationFn: loginMutationFn,
     onSuccess: (data) => {
       const accessToken = data.data.accessToken;
       router.push(`/data?userData=${encodeURIComponent(JSON.stringify(accessToken))}`);
@@ -33,9 +39,9 @@ const LoginForm = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm<FormData>();
 
-  const onSubmit = (data: void) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     mutation.mutate(data);
   };
 
@@ -43,7 +49,6 @@ const LoginForm = () => {
     <div className="max-w-sm mx-auto p-4 bg-white shadow rounded">
       <h1 className="text-2xl font-bold mb-4">Login</h1>
 
-      {/* @ts-ignore */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div>
           <label className="block font-medium">Email</label>
@@ -51,10 +56,9 @@ const LoginForm = () => {
             type="email"
             {...register("email", { required: "Email is required" })}
             className="border rounded px-3 py-2 w-full"
-            value="challenge2025@arbolitics.com"
+            defaultValue="challenge2025@arbolitics.com"
           />
 
-          {/* @ts-ignore */}
           {errors.email && <span className="text-red-500 text-sm">{errors.email.message}</span>}
         </div>
 
@@ -64,10 +68,9 @@ const LoginForm = () => {
             type="password"
             {...register("password", { required: "Password is required" })}
             className="border rounded px-3 py-2 w-full"
-            value="challenge2025"
+            defaultValue="challenge2025"
           />
 
-          {/* @ts-ignore */}
           {errors.password && <span className="text-red-500 text-sm">{errors.password.message}</span>}
         </div>
 
@@ -76,11 +79,9 @@ const LoginForm = () => {
         <button
           type="submit"
           className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          // @ts-ignore
-          disabled={mutation.isLoading}
+          disabled={mutation.isPending}
         >
-          {/* @ts-ignore */}
-          {mutation.isLoading ? "Submitting..." : "Login"}
+          {mutation.isPending ? "Submitting..." : "Login"}
         </button>
       </form>
 
