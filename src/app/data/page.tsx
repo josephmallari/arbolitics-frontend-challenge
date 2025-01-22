@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +16,7 @@ const fetchDataset = async ({ queryKey }) => {
       limit,
     },
   });
+
   return response.data.data; // Adjusted to return the data array
 };
 
@@ -26,22 +27,17 @@ const processData = (data, interval) => {
   }
 
   const intervals = {
-    daily: 24,
-    weekly: 24 * 7,
-    monthly: 24 * 7 * 4,
+    daily: 24 * 2,
+    weekly: 24 * 7 * 2,
+    monthly: 24 * 7 * 4 * 2,
   };
 
   const intervalSize = intervals[interval];
+
   return data.slice(0, intervalSize);
 };
 
-const DataVisualization = ({ data }) => {
-  const [interval, setInterval] = useState("daily");
-
-  const handleIntervalChange = (e) => {
-    setInterval(e.target.value);
-  };
-
+const DataVisualization = ({ data, interval }) => {
   const filteredData = processData(data, interval);
 
   const device1Data = filteredData.filter((item) => item.DID === "25_225");
@@ -90,16 +86,6 @@ const DataVisualization = ({ data }) => {
 
   return (
     <div className="p-4">
-      <div className="mb-4">
-        <label htmlFor="interval" className="mr-2">
-          Select Interval:
-        </label>
-        <select id="interval" value={interval} onChange={handleIntervalChange} className="p-2 border rounded">
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
-          <option value="monthly">Monthly</option>
-        </select>
-      </div>
       <ReactECharts option={option} style={{ height: "400px", width: "100%" }} />
     </div>
   );
@@ -109,13 +95,25 @@ const DataPage = () => {
   const searchParams = useSearchParams();
   const accessToken = searchParams ? searchParams.get("userData") : null;
 
+  const [interval, setInterval] = useState("daily");
+  const [limit, setLimit] = useState(24);
+
+  useEffect(() => {
+    const intervalLimits = {
+      daily: 24,
+      weekly: 168,
+      monthly: 672,
+    };
+    setLimit(intervalLimits[interval]);
+  }, [interval]);
+
   const parsedData = accessToken ? JSON.parse(accessToken) : null;
   const {
     data: dataset,
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["dataset", parsedData, 10, 672], // Replace 10 and 1 with actual location_id and limit if needed
+    queryKey: ["dataset", parsedData, 10, limit], // Replace 10 with actual location_id if needed
     queryFn: fetchDataset,
     enabled: !!parsedData, // Only run the query if parsedData is available
   });
@@ -123,7 +121,26 @@ const DataPage = () => {
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching dataset: {error.message}</p>;
 
-  return <DataVisualization data={dataset} />;
+  return (
+    <div className="p-4">
+      <div className="mb-4">
+        <label htmlFor="interval" className="mr-2">
+          Select Interval:
+        </label>
+        <select
+          id="interval"
+          value={interval}
+          onChange={(e) => setInterval(e.target.value)}
+          className="p-2 border rounded"
+        >
+          <option value="daily">Daily</option>
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+        </select>
+      </div>
+      <DataVisualization data={dataset} interval={interval} />
+    </div>
+  );
 };
 
 export default DataPage;
