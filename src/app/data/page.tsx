@@ -37,11 +37,25 @@ const processData = (data, interval) => {
   return data.slice(0, intervalSize);
 };
 
+const generateXAxisData = (limit) => {
+  const xAxisData = [];
+  const startDate = new Date("2025-01-01T00:00:00");
+
+  for (let i = 0; i < limit; i++) {
+    const date = new Date(startDate.getTime() - i * 60 * 60 * 1000);
+    xAxisData.unshift(date.toLocaleString());
+  }
+
+  return xAxisData;
+};
+
 const DataVisualization = ({ data, interval }) => {
   const filteredData = processData(data, interval);
 
   const device1Data = filteredData.filter((item) => item.DID === "25_225");
   const device2Data = filteredData.filter((item) => item.DID === "25_226");
+
+  console.log("filtered dataa", filteredData.length);
 
   const option = {
     title: {
@@ -55,7 +69,7 @@ const DataVisualization = ({ data, interval }) => {
     },
     xAxis: {
       type: "category",
-      data: filteredData.map((item) => new Date(item.TMS * 1000).toLocaleString()),
+      data: generateXAxisData(filteredData.length / 2), // Updated to use generateXAxisData
     },
     yAxis: {
       type: "value",
