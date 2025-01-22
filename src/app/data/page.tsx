@@ -36,8 +36,8 @@ const processData = (data: DataItem[], interval: Interval): DataItem[] => {
 
   const intervals: Record<Interval, number> = {
     daily: 24 * 2,
-    weekly: 24 * 7,
-    monthly: 24 * 7 * 4,
+    weekly: 24 * 7 * 2,
+    monthly: 24 * 7 * 4 * 2,
   };
 
   const intervalSize = intervals[interval];
