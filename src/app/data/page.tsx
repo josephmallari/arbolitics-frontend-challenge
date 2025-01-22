@@ -4,6 +4,7 @@ import React from "react";
 import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 const fetchDataset = async ({ queryKey }) => {
   const [, accessToken, location_id, limit] = queryKey;
@@ -23,7 +24,7 @@ const data = () => {
 
   const parsedData = accessToken ? JSON.parse(accessToken) : null;
   const {
-    data: dataset,
+    data: fetchedData,
     error,
     isLoading,
   } = useQuery({
@@ -32,13 +33,15 @@ const data = () => {
     enabled: !!parsedData, // Only run the query if parsedData is available
   });
 
+  const [dataset] = useState(fetchedData);
+
   if (isLoading) return <p>Loading...</p>;
   if (error) return <p>Error fetching dataset: {error.message}</p>;
 
   return (
     <div>
       <h1>Data Component</h1>
-      {dataset ? <pre>{JSON.stringify(dataset, null, 2)}</pre> : <p>No data available</p>}
+      {/* {dataset ? <pre>{JSON.stringify(dataset, null, 2)}</pre> : <p>No data available</p>} */}
     </div>
   );
 };
