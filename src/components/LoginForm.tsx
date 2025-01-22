@@ -31,7 +31,7 @@ const LoginForm: React.FC = () => {
     mutationFn: loginMutationFn,
     onSuccess: (data) => {
       const accessToken = data.data.accessToken;
-      router.push(`/data?userData=${encodeURIComponent(JSON.stringify(accessToken))}`);
+      router.push(`/dashboard?userData=${encodeURIComponent(JSON.stringify(accessToken))}`);
     },
   });
 

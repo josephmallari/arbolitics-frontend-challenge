@@ -1,5 +1,5 @@
 import ReactECharts from "echarts-for-react";
-import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from ".././types"; // Import types
+import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from "../app/types"; // Import types
 
 function processData(data: DataItem[], interval: Interval): DataItem[] {
   if (!Array.isArray(data)) {

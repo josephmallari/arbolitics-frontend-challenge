@@ -5,7 +5,7 @@ import axios from "axios";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import "tailwindcss/tailwind.css";
-import DataVisualization from "../components/DataVisualization";
+import DataVisualization from "../../components/DataVisualization";
 import { Interval } from "../types"; // Import type
 
 const fetchDataset = async ({ queryKey }: { queryKey: [string, string | null, number, number] }) => {
