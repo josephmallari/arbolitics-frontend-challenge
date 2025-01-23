@@ -7,7 +7,7 @@ function processData(data: DataItem[], interval: Interval): DataItem[] {
   const intervals: Record<Interval, number> = {
     daily: 24, // 24
     weekly: 24 * 7, // 168
-    monthly: 24 * 7 * 4, // 672
+    monthly: 24 * 7 * 4 * 12, // 672
   };
 
   const intervalSize = intervals[interval];
@@ -56,22 +56,34 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ data, interval })
       {
         name: "Temperature 25_225",
         type: "line",
-        data: device1Data.map((item) => item.tem1),
+        data: device1Data
+          .slice()
+          .reverse()
+          .map((item) => item.tem1),
       },
       {
         name: "Humidity 25_225",
         type: "line",
-        data: device1Data.map((item) => item.hum1),
+        data: device1Data
+          .slice()
+          .reverse()
+          .map((item) => item.hum1),
       },
       {
         name: "Temperature 25_226",
         type: "line",
-        data: device2Data.map((item) => item.tem1),
+        data: device2Data
+          .slice()
+          .reverse()
+          .map((item) => item.tem1),
       },
       {
         name: "Humidity 25_226",
         type: "line",
-        data: device2Data.map((item) => item.hum1),
+        data: device2Data
+          .slice()
+          .reverse()
+          .map((item) => item.hum1),
       },
     ],
   };
