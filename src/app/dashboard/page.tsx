@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useSearchParams } from "next/navigation";
-import { useQuery } from "@tanstack/react-query";
 import "tailwindcss/tailwind.css";
+import { Interval } from "../types";
+import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import DataVisualization from "../../components/DataVisualization";
-import { Interval } from "../types"; // Import type
 
+// Fetch data from the API
 const fetchDataset = async ({ queryKey }: { queryKey: [string, string | null, number, number] }) => {
   const [, accessToken, location_id, limit] = queryKey;
   const response = await axios.get("/api/fetchData", {
@@ -18,7 +19,16 @@ const fetchDataset = async ({ queryKey }: { queryKey: [string, string | null, nu
     },
   });
 
-  return response.data.data; // Adjusted to return the data array
+  return response.data.data;
+};
+
+const calculateLimit = (interval: Interval): number => {
+  const intervalLimits = {
+    daily: 24,
+    weekly: 168,
+    monthly: 672,
+  };
+  return intervalLimits[interval];
 };
 
 const DataPage: React.FC = () => {
@@ -26,16 +36,7 @@ const DataPage: React.FC = () => {
   const accessToken = searchParams ? searchParams.get("userData") : null;
 
   const [interval, setInterval] = useState<Interval>("daily");
-  const [limit, setLimit] = useState(24);
-
-  useEffect(() => {
-    const intervalLimits = {
-      daily: 24,
-      weekly: 168,
-      monthly: 672,
-    };
-    setLimit(intervalLimits[interval]);
-  }, [interval]);
+  const limit = calculateLimit(interval);
 
   const parsedData = accessToken ? JSON.parse(accessToken) : null;
   const {

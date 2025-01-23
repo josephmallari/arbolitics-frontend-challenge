@@ -1,16 +1,11 @@
 import ReactECharts from "echarts-for-react";
-import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from "../app/types"; // Import types
+import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from "../app/types";
 
 function processData(data: DataItem[], interval: Interval): DataItem[] {
-  if (!Array.isArray(data)) {
-    console.error("Data is not an array:", data);
-    return [];
-  }
-
   const intervals: Record<Interval, number> = {
-    daily: 24 * 2,
-    weekly: 24 * 7 * 2,
-    monthly: 24 * 7 * 4 * 2,
+    daily: 24,
+    weekly: 24 * 7,
+    monthly: 24 * 7 * 4,
   };
 
   const intervalSize = intervals[interval];
@@ -18,6 +13,7 @@ function processData(data: DataItem[], interval: Interval): DataItem[] {
   return data.slice(0, intervalSize);
 }
 
+// since the data didn't have correct timestamps, I generated them based on instructions that every data point is 1 hour apart and is retroactive
 const generateXAxisData: GenerateXAxisData = (limit) => {
   const xAxisData: string[] = [];
   const startDate = new Date("2025-01-01T00:00:00");
@@ -47,7 +43,7 @@ const DataVisualization: React.FC<DataVisualizationProps> = ({ data, interval })
     },
     xAxis: {
       type: "category",
-      data: generateXAxisData(filteredData.length / 2), // Updated to use generateXAxisData
+      data: generateXAxisData(filteredData.length / 2),
     },
     yAxis: {
       type: "value",

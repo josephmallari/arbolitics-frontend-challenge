@@ -14,3 +14,14 @@ export interface DataVisualizationProps {
   data: DataItem[];
   interval: Interval;
 }
+
+export interface FormData {
+  email: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  data: {
+    accessToken: string;
+  };
+}
