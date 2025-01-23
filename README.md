@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Arbolitics Front-End Challenge 2025
 
-## Getting Started
+This repository solves the tasks described on the Front-End task provided.
 
-First, run the development server:
+- Perform a login request
+- Request data
+- Visualize data
+
+## Setup
+
+The techstack is the latest Next.js, React, Tailwind, TS, echarts-for-react, React forms, and react query as required in the instructions.
+
+## Installation
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+  npm i
+  npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Perform a login request
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The form is using React forms as recommended. Validation, error handling, and submission are all handled by react forms. Email and password are pre-filled for easier testing.
 
-## Learn More
+I created an api proxy to make the request from an api route to bypass CORS. The request is done with react query. Once the request has been done successfully, an accessToken is extracted from the response, and then passed onto the useRouter hook and then redirected to the dashboard page.
 
-To learn more about Next.js, take a look at the following resources:
+## Request data
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Once redirected to the dashboard page, a request is made to retrieve data on device types. I used axios to make the request in order to be able to add params on a GET request.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Visualise data
 
-## Deploy on Vercel
+To visualise data, I used echarts-for-react. There were many options on which graph to use but I opted to use the simple line chart due to time constraints and I preferred to make the straight forward approach.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+However, couple other ideas I thought about was using a heatmapping chart to go with the theme of temperature and humidity. The other idea was to use water condensation to also go with the humidity theme. Given more time and the opportunity, more creative approaches could have been further explored and implemented.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Visualization
+
+Here is an example of the data visualization:
+
+![Data Visualization](/login.png)
