@@ -19,7 +19,7 @@ The techstack is the latest Next.js, React, Tailwind, TS, echarts-for-react, Rea
 
 ## Perform a login request
 
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
+<img src="./public/login.png" alt="login" width="300" />
 
 The form is using React forms as recommended. Validation, error handling, and submission are all handled by react forms. Email and password are pre-filled for easier testing.
 
@@ -33,10 +33,14 @@ Once redirected to the dashboard page, a request is made to retrieve data on dev
 
 To visualise data, I used echarts-for-react. There were many options on which graph to use but I opted to use the simple line chart due to time constraints and I preferred to make the straight forward approach.
 
+<img src="./public/chart.png" alt="chart" width="300" />
+
 However, couple other ideas I thought about was using a heatmapping chart to go with the theme of temperature and humidity. The other idea was to use water condensation to also go with the humidity theme. Given more time and the opportunity, more creative approaches could have been further explored and implemented.
 
-## Visualization
+Heatmapping
+<img src="./public/chart.png" alt="heatmap" width="300" />
+https://echarts.apache.org/examples/en/editor.html?c=heatmap-cartesian
 
-Here is an example of the data visualization:
-
-<img src="./public/login.png" alt="Data Visualization" width="300" />
+Bodyfill
+<img src="./public/bodyfill.png" alt="bodyfill" width="300" />
+https://echarts.apache.org/examples/en/editor.html?c=pictorialBar-body-fill
