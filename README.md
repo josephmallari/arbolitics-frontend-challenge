@@ -39,4 +39,4 @@ However, couple other ideas I thought about was using a heatmapping chart to go 
 
 Here is an example of the data visualization:
 
-![Data Visualization](./public/login.png)
+<img src="./public/login.png" alt="Data Visualization" width="300" />
