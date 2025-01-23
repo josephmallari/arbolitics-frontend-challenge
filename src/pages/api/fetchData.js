@@ -20,7 +20,7 @@ export default async function handler(req, res) {
         },
         data: {
           location_id: location_id,
-          limit: 672,
+          limit: Number(limit),
         },
       });
 

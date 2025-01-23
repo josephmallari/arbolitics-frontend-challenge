@@ -44,7 +44,7 @@ const DataPage: React.FC = () => {
     error,
     isLoading,
   } = useQuery({
-    queryKey: ["dataset", parsedData, 10, limit], // Replace 10 with actual location_id if needed
+    queryKey: ["dataset", parsedData, 10, limit],
     queryFn: fetchDataset,
     enabled: !!parsedData, // Only run the query if parsedData is available
   });

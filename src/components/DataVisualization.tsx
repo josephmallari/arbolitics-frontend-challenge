@@ -2,15 +2,17 @@ import ReactECharts from "echarts-for-react";
 import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from "../app/types";
 
 function processData(data: DataItem[], interval: Interval): DataItem[] {
+  // number of points to right
   const intervals: Record<Interval, number> = {
-    daily: 24,
-    weekly: 24 * 7,
-    monthly: 24 * 7 * 4,
+    daily: 24, // 24
+    weekly: 24 * 7, // 168
+    monthly: 24 * 7 * 4, // 672
   };
 
   const intervalSize = intervals[interval];
 
-  return data.slice(0, intervalSize);
+  // multiplying by 2 because we have 2 devices in the same data structure
+  return data.slice(0, intervalSize * 2);
 }
 
 // since the data didn't have correct timestamps, I generated them based on instructions that every data point is 1 hour apart and is retroactive
@@ -28,6 +30,7 @@ const generateXAxisData: GenerateXAxisData = (limit) => {
 
 const DataVisualization: React.FC<DataVisualizationProps> = ({ data, interval }) => {
   const filteredData = processData(data, interval);
+
   const device1Data = filteredData.filter((item) => item.DID === "25_225");
   const device2Data = filteredData.filter((item) => item.DID === "25_226");
 
