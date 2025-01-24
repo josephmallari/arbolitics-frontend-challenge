@@ -33,6 +33,10 @@ Once redirected to the dashboard page, a request is made to retrieve data on dev
 
 To visualise data, I used echarts-for-react. There were many options on which graph to use but I opted to use the simple line chart due to time constraints and I preferred to make the straight forward approach.
 
+### Explanation of logic
+
+Since the first point is 01-01-2025 00:00:00, then all the other requests go back in time. The last point should be 01-01-2025 00:00:00. For device 25_225 tem -30, hum -28, 25_226 tem -15, hum -14.
+
 <img src="./public/chart.png" alt="chart" width="300" />
 
 However, couple other ideas I thought about was using a heatmapping chart to go with the theme of temperature and humidity. The other idea was to use water condensation to also go with the humidity theme. Given more time and the opportunity, more creative approaches could have been further explored and implemented.
