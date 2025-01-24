@@ -10,7 +10,7 @@ import { useMutation, MutationFunction } from "@tanstack/react-query";
 // perform Login and get accessToken
 const loginMutationFn: MutationFunction<LoginResponse, FormData> = async (formData) => {
   try {
-    const response = await axios.post<LoginResponse>("/api/proxy", formData, {
+    const response = await axios.post<LoginResponse>("/api/login", formData, {
       headers: {
         "Content-Type": "application/json",
       },

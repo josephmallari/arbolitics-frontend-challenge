@@ -1,7 +1,6 @@
 import ReactECharts from "echarts-for-react";
 import { DataItem, Interval, GenerateXAxisData, DataVisualizationProps } from "../app/types";
 
-// 8064
 function processData(data: DataItem[], interval: Interval): DataItem[] {
   // number of points to right
   const intervals: Record<Interval, number> = {

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default async function handler(req, res) {
+export default async function fetchDataHandler(req, res) {
   if (req.method === "GET") {
     const { accessToken, location_id, limit } = req.query;
 
@@ -19,12 +19,13 @@ export default async function handler(req, res) {
           "Content-Type": "application/json",
         },
         data: {
-          location_id: location_id,
+          location_id: Number(location_id),
           limit: Number(limit),
         },
       });
 
       const data = apiResponse.data;
+
       res.status(200).json(data);
     } catch (error) {
       console.error("Error fetching dataset:", error);
