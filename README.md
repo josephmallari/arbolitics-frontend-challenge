@@ -37,10 +37,12 @@ To visualise data, I used echarts-for-react. There were many options on which gr
 
 However, couple other ideas I thought about was using a heatmapping chart to go with the theme of temperature and humidity. The other idea was to use water condensation to also go with the humidity theme. Given more time and the opportunity, more creative approaches could have been further explored and implemented.
 
-Heatmapping:
+### Heatmapping:
+
 <img src="./public/heatmap.png" alt="heatmap" width="300" />
 https://echarts.apache.org/examples/en/editor.html?c=heatmap-cartesian
 
-Bodyfill:
+### Bodyfill:
+
 <img src="./public/bodyfill.png" alt="bodyfill" width="300" />
 https://echarts.apache.org/examples/en/editor.html?c=pictorialBar-body-fill

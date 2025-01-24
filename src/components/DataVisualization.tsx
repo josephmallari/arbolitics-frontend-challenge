@@ -15,7 +15,7 @@ function processData(data: DataItem[], interval: Interval): DataItem[] {
   return data.slice(0, intervalSize * 2);
 }
 
-// since the data didn't have correct timestamps, I generated them based on instructions that every data point is 1 hour apart and is retroactive
+// since the data didn't have correct timestamps (TMS I assume), I generated them based on instructions that every data point is 1 hour apart and is retroactive
 const generateXAxisData: GenerateXAxisData = (limit) => {
   const xAxisData: string[] = [];
   const startDate = new Date("2025-01-01T00:00:00");
